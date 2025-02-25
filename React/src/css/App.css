@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Stardew'; /*a name to be used later*/
+  src: url('./svthin.ttf'); /*URL to font*/
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  text-align: center;
+  background-image: url("./stardew_backdrop.png");
+  font-family: Stardew;
+}

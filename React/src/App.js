@@ -1,12 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
+import './css/App.css';
+import LoginPage from './login';
+import Navbar from './Navbar';
 
 function App() {
   return (
-    <div className="scroll-bar">
-     <p>item 1</p>
-     <p>item 2</p>
-     <p>item 3</p>
+    <div className = "App">
+      <Navbar />
+      <LoginPage />
     </div>
   );
 }
