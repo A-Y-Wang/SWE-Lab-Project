@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'StardewCAPS'; /*a name to be used later*/
+    src: url('./stardew.ttf'); /*URL to font*/
+}
+
+.navbar {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  background-color: #17181a;
+  color: #fff;
+  padding: 1rem;
+  position: relative;
+}
+
+.navbar-center {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.navbar-center .logo {
+  font-family: StardewCAPS;
+  font-size: 4rem;
+  font-weight: bold;
+  color: #e6c27a;
+  text-decoration: none;
+  text-align: center;
+}
+  
+  

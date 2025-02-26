@@ -1,18 +1,20 @@
-import './App.css';
-import ItemList from './Items.js';
+import './css/App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from './login';
+import Navbar from './Navbar';
+import DummyPage from './dummyPage'; 
 
 function App() {
   return (
-    <div className="app-container">
-      <div className="scroll-bar items">
-        <h2>Checkout Items</h2>
-        <ItemList />
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/dummyPage" element={<DummyPage />} /> {/* Define the route for the new page */}
+        </Routes>
       </div>
-
-      <div className="scroll-bar projects">
-        <h2>My Projects</h2>
-      </div>
-    </div>
+    </Router>
   );
 }
 
