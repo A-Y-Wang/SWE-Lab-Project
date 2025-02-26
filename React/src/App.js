@@ -2,7 +2,7 @@ import './css/App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from './login';
 import Navbar from './Navbar';
-import DummyPage from './dummyPage'; 
+import Checkout from './checkout'; 
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/dummyPage" element={<DummyPage />} /> {/* Define the route for the new page */}
+          <Route path="/checkout" element={<Checkout />} /> {/* Define the route for the new page */}
         </Routes>
       </div>
     </Router>

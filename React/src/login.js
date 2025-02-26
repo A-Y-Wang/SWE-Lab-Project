@@ -11,7 +11,7 @@ export default function LoginPage() {
     e.preventDefault();
     console.log("Username:", username, "Password:", password);
     //add login logic here
-    navigate("/dummyPage"); //redirects to new page
+    navigate("/checkout"); //redirects to new page
   };
 
   return (
