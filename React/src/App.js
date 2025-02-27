@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from './login';
 import Navbar from './Navbar';
 import Checkout from './checkout'; 
+import SignUp from './signup'; 
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/checkout" element={<Checkout />} /> {/* Define the route for the new page */}
         </Routes>
       </div>
