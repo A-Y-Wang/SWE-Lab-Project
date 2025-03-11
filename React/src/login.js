@@ -36,10 +36,12 @@ export default function LoginPage() {
             className="w-full p-2 border border-gray-300 rounded"
           />
           <br />
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+          <button type="submit" >
             Login
           </button>
         </form>
+        <br />
+        <p>Don't have an account? <a href="/signup">Sign Up</a></p>
     </div>
   );
 }

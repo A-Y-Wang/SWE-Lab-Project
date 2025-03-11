@@ -17,3 +17,29 @@ html, body {
   background-image: url("./stardew_backdrop.png");
   font-family: Stardew;
 }
+
+button {
+  background-color: #e6c27a;
+  border: 4px solid #9b632b;
+  color: #5a3411;
+  font-family: stardew;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0px #9b632b;
+  cursor: pointer;
+  box-shadow: inset -2px -2px 0 #e0a752, inset 2px 2px 0 #f2d59b;
+  transition: all 0.1s ease-in-out;
+  outline: none;
+  margin-top: 1.5rem;
+}
+
+button:hover {
+  background-color: #f2d59b;
+  box-shadow: inset -2px -2px 0 #f2b66d, inset 2px 2px 0 #ffe1a3;
+}
+
+button:active {
+  background-color: #c89d5b;
+  box-shadow: inset -2px -2px 0 #9b632b, inset 2px 2px 0 #e6c27a;
+}
