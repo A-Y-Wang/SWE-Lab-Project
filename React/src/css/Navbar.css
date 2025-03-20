@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  background-color: #17181a;
+  background-image: url('./woodjpg.jpg');
   color: #fff;
   padding: 1rem;
   position: relative;
@@ -23,7 +23,7 @@
   font-family: StardewCAPS;
   font-size: 4rem;
   font-weight: bold;
-  color: #e6c27a;
+  color: #fffce0;
   text-decoration: none;
   text-align: center;
 }

@@ -1,11 +1,13 @@
 import './css/checkout.css';
 import ItemList from './Items';
+import "./css/App.css"
+
 
 function Checkout() {
     return (
         <div className="app-container">
             <div className="scroll-bar items">
-                <h2>Checkout Items</h2>
+                <h1>Checkout Items</h1>
                 <ItemList />
             </div>
         </div>

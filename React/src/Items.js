@@ -1,5 +1,6 @@
 import './css/checkout.css'
 import { useState } from "react";
+import "./css/App.css"
 
 
 const ItemList = () => {
