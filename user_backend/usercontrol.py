@@ -8,23 +8,33 @@ CORS(app)
 
 uri = "mongodb+srv://swelabteam:0njGARlJosA7m0B4@userstuff.vmqiy.mongodb.net/?retryWrites=true&w=majority&appName=UserStuff"
 
-def createCollection():
-    client = MongoClient(uri,server_api=ServerApi('1'))
-    try:
-        client.admin.command('ping')
-        print("Pinged your deployment. You successfully connected to MongoDB!")
-        database = client["UserStuff"]
-        collection = database["UserLogin"]
-        doc = {
-            "Username":"Sarah",
-            "Password":"Mobley",
-            "UserId":3447
-        }
-        collection.insert_one(doc)
-        client.close()
-    except Exception as e:
-        print(e)
-        return None
+client = MongoClient(uri,server_api=ServerApi('1'))
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+    database = client["UserStuff"]
+    collection = database["UserLogin"]
+
+except Exception as e:
+    print(e)
+
+# def createCollection():
+#     client = MongoClient(uri,server_api=ServerApi('1'))
+#     try:
+#         client.admin.command('ping')
+#         print("Pinged your deployment. You successfully connected to MongoDB!")
+#         database = client["UserStuff"]
+#         collection = database["UserLogin"]
+#         doc = {
+#             "Username":"Sarah",
+#             "Password":"Mobley",
+#             "UserId":3447
+#         }
+#         collection.insert_one(doc)
+#         client.close()
+#     except Exception as e:
+#         print(e)
+#         return None
 
 def get_database():
     client = MongoClient(uri,server_api=ServerApi('1'))
@@ -32,8 +42,9 @@ def get_database():
 
 @app.route('/login', methods=['POST'])
 def login():
-    database, client = get_database()
-    collection = database["UserLogin"]
+    
+    # database, client = get_database()
+    # collection = database["UserLogin"]
     
     try:
         data = request.json
@@ -53,10 +64,9 @@ def login():
     except Exception as e:
         print("database error:",e)
         return jsonify({"error":"server error"}),500
-
-    finally:
-        client.close()
     
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
-
+    try:
+        app.run(debug=True)
+    finally:
+        client.close()
