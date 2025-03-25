@@ -1,5 +1,6 @@
-import './App.css'
+import './css/checkout.css'
 import { useState } from "react";
+import "./css/App.css"
 
 
 const ItemList = () => {
@@ -11,25 +12,41 @@ const ItemList = () => {
       { id: 5, name: "Peach", quantity: 10, details: "sweet and pink"},
       { id: 6, name: "Pear", quantity: 10, details: "golden and crunchy"},
       { id: 7, name: "Raspberry", quantity: 10, details: "tiny, tart, red"},
-      { id: 8, name: "Pineapple", quantity: 10, details: "pina colada"}
+      { id: 8, name: "Pineapple", quantity: 10, details: "pina colada"},
+      { id: 9, name: "Blackberry", quantity: 10, details: "black raspberry"},
+      { id: 10, name: "Apricot", quantity: 10, details: "yummy in jam"}
     ]);
 
     const [expandedItems, setExpandedItems] = useState({});
     const [clickedItems, setClickedItems] = useState({}); 
+    const [checkoutQuantities, setCheckoutQuantities] = useState({});
 
     const dropDetails = (id) => {
-        setExpandedItems((prevState) => ({
-          ...prevState,
-          [id]: !prevState[id], // expanded state
+        setExpandedItems((prevState) => 
+          ({...prevState, [id]: !prevState[id], // expanded state
         }));
       };
 
     const checkoutButton = (id) => {
-        setClickedItems(prevState => ({
-          ...prevState,
-          [id]: !prevState[id] // green state
-        }));
-      };
+      const inputQuantity = parseInt(checkoutQuantities[id], 10);
+      if(!isNaN(inputQuantity) && inputQuantity > 0){
+        setItems(prevItems =>
+          prevItems.map(item =>{
+            if (item.id === id){
+              const newQuantity = item.quantity - inputQuantity;
+              return {...item, quantity: newQuantity >=0 ? newQuantity : 0};
+            }
+            return item;
+          })
+        );
+      }
+        setCheckoutQuantities(prev => ({...prev, [id]: ""}));
+        setClickedItems(prev => ({...prev, [id]: true}));
+
+        setTimeout(() => {
+          setClickedItems((prev) => ({...prev, [id]: false}));
+        }, 3000);
+    }
   
     return (
       <>
@@ -39,8 +56,11 @@ const ItemList = () => {
                 <div className="item-details">
                     <p><strong>Name:</strong> {item.name}</p>
                     <p><strong>Quantity:</strong> {item.quantity}</p>
-                </div>
 
+                </div>
+                <div className="details-container">
+                  <p><strong>Details:</strong> {item.details}</p>
+                </div>
                 <button onClick = {() => dropDetails(item.id)}>
                     {expandedItems[item.id] ? "Less" : "More"}
                 </button>
@@ -48,15 +68,25 @@ const ItemList = () => {
             
             {expandedItems[item.id] && (
                <div className = "details-box show">
-                <p>{item.details}</p> 
+                <input
+                  type="number"
+                  placeholder="Enter Quantity"
+                  value={checkoutQuantities[item.id] || ""}
+                  onChange={(e) =>
+                    setCheckoutQuantities(prev => ({
+                      ...prev,
+                      [item.id]: e.target.value,
+                    }))
+                  }
+                />
 
                 <button 
                     className={`toggle-btn ${clickedItems[item.id] ? "green" : ""}`} 
                     onClick={() => checkoutButton(item.id)}
                 >
-                    {clickedItems[item.id] ? "Clicked!" : "Click Me"}
+                    {clickedItems[item.id] ? "Complete!" : "Checkout"}
                 </button>
-            </div>
+               </div>
             )}
           </div>
         ))}
@@ -64,4 +94,4 @@ const ItemList = () => {
     );
   };
   
-  export default ItemList;
+export default ItemList;

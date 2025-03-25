@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import checkout from './checkout';
+import checkout from './css/checkout.css';
 
 test('renders learn react link', () => {
   render(<App />);

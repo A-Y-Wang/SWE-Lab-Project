@@ -1,0 +1,19 @@
+Inventory Endpoints:
+
+GET /api/inventory - Get all inventory items
+GET /api/inventory/<item_id> - Get a specific item
+POST /api/inventory - Add a new item
+PUT /api/inventory/<item_id> - Update an item
+DELETE /api/inventory/<item_id> - Delete an item
+
+Checkout Endpoints:
+
+GET /api/checkout - Get all checkout records
+GET /api/checkout/active - Get currently checked out items
+POST /api/checkout/<item_id> - Check out an item
+PUT /api/checkout/<checkout_id>/return - Return a checked out item
+PUT /api/checkout/<checkout_id>/update-condition - Update an item's condition
+
+Statistics Endpoint:
+
+GET /api/stats/inventory - Get inventory statistics

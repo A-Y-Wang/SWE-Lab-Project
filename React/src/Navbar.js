@@ -7,7 +7,7 @@ const Navbar = () => {
 <nav className="navbar">
   <div className="navbar-center">
     <a href="/" className="logo">
-        Stardew Valley Marketplace
+        Swedew Valley Marketplace
     </a>
   </div>
 </nav>

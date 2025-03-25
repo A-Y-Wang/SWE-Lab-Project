@@ -1,4 +1,5 @@
 import './css/App.css';
+import './css/checkout.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from './login';
 import Navbar from './Navbar';
