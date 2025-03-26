@@ -4,11 +4,14 @@ from bson.objectid import ObjectId
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from flask import Flask
+from flask_cors import CORS
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:3000"])
 
 # Get MongoDB URI from environment or use default
 mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/inventory_system")
@@ -18,9 +21,10 @@ app.config["MONGO_URI"] = mongo_uri
 try:
     mongo = PyMongo(app)
     # Test connection
-    mongo.db.command('ping')
+    db = mongo.cx['inventory_system']
+    db.command('ping')
     print("MongoDB connection successful!")
-    print(f"Available collections: {mongo.db.list_collection_names()}")
+    print(f"Available collections: {db.list_collection_names()}")
 except Exception as e:
     print(f"MongoDB connection error: {e}")
     # Continue running even with error to see additional debug info
@@ -47,7 +51,7 @@ def doc_to_dict(doc):
 # Inventory Routes
 @app.route('/api/inventory', methods=['GET'])
 def get_all_inventory():
-    items = list(mongo.db.inventory.find())
+    items = list(db.inventory.find())
     return jsonify([doc_to_dict(item) for item in items])
 
 @app.route('/api/inventory/<item_id>', methods=['GET'])
@@ -106,6 +110,7 @@ def add_inventory_item():
 def update_inventory_item(item_id):
     try:
         data = request.get_json()
+        print(data)
         update_data = {}
         
         # Only update fields that are provided
@@ -119,7 +124,7 @@ def update_inventory_item(item_id):
         # Always update the last_updated field
         update_data['last_updated'] = datetime.now()
         
-        result = mongo.db.inventory.update_one(
+        result = db.inventory.update_one(
             {'_id': ObjectId(item_id)},
             {'$set': update_data}
         )
@@ -129,6 +134,7 @@ def update_inventory_item(item_id):
             
         return jsonify({"message": "Item updated successfully"})
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 400
 
 @app.route('/api/inventory/<item_id>', methods=['DELETE'])
@@ -330,3 +336,4 @@ def inventory_stats():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    #comment to false later
