@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./css/login.css"
 
 export default function LoginPage() {
@@ -7,11 +8,25 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Username:", username, "Password:", password);
     //add login logic here
-    navigate("/checkout"); //redirects to new page
+    try{
+      const response = await axios.post("http://localhost:5000/login", {
+        username: username,
+        password: password,
+      });
+
+      if (response.status === 200)  {
+        navigate("/checkout"); //redirects to new page
+      } else {
+        alert(response.data.error);
+      }
+    } catch (error) {
+      console.error("Login failed",error);
+      alert("Login Failed, Try again");
+    }
   };
 
   return (
