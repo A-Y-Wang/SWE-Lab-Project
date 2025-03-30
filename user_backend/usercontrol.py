@@ -18,15 +18,29 @@ try:
 except Exception as e:
     print(e)
 
-# def createCollection():
-#         doc = {
-#             "Username":"Abbie",
-#             "Password":"Wang",
-#             "UserId":346,
-#             "ProjectIds":[3,4,5]
-#         }
-#         collection.insert_one(doc)
-#         client.close()
+@app.route('/signup',methods=['POST'])
+def createCollection():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')   
+        if not username or not password:
+            return jsonify({"error": "missing user or password"}), 400 
+        existing_user = collection.find_one({"Username":username})
+        if existing_user:
+            return jsonify({"error":"user already exists"}),409
+        doc = {
+            "Username":username,
+            "Password":password,
+            "UserId": collection.count_documents({}) + 1,
+            "ProjectIds":[]
+        }
+        collection.insert_one(doc)
+        return jsonify({"message":"successfully registered", "redirect":"/checkout"}),201
+
+    except Exception as e:
+        print("error:",e)
+        return jsonify({"error": "server error"}), 500
 
 def get_database():
     client = MongoClient(uri,server_api=ServerApi('1'))
