@@ -1,14 +1,37 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import './css/signup.css';
 
 export default function SignUp() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordCheck, setPasswordCheck] = useState("");
+    const navigate = useNavigate();
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       console.log("Username:", username, "Password:", password);
+      if (password !== passwordCheck){
+        alert("passwords dont match");
+        return
+      }
+      try{
+        const response = await axios.post("http://localhost:5000/signup", {
+          username: username,
+          password: password
+        })
+
+        if(response.status === 201){
+          navigate("/checkout");
+        }
+        else{
+          alert(response.data.error);
+        }
+      } catch (error) {
+        console.error("registration failed",error);
+        alert("Registration Failed, Try again");
+      }
     };
   
     return (
