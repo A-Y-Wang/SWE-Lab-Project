@@ -19,22 +19,14 @@ except Exception as e:
     print(e)
 
 # def createCollection():
-#     client = MongoClient(uri,server_api=ServerApi('1'))
-#     try:
-#         client.admin.command('ping')
-#         print("Pinged your deployment. You successfully connected to MongoDB!")
-#         database = client["UserStuff"]
-#         collection = database["UserLogin"]
 #         doc = {
-#             "Username":"Sarah",
-#             "Password":"Mobley",
-#             "UserId":3447
+#             "Username":"Abbie",
+#             "Password":"Wang",
+#             "UserId":346,
+#             "ProjectIds":[3,4,5]
 #         }
 #         collection.insert_one(doc)
 #         client.close()
-#     except Exception as e:
-#         print(e)
-#         return None
 
 def get_database():
     client = MongoClient(uri,server_api=ServerApi('1'))
@@ -70,3 +62,5 @@ if __name__ == "__main__":
         app.run(debug=True)
     finally:
         client.close()
+
+# createCollection()
