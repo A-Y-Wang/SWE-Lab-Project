@@ -8,6 +8,8 @@ def create_app():
     app.register_blueprint(users_bp, url_prefix='/users')
     return app
 
+app = create_app()
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -17,5 +19,4 @@ def not_found(e):
     return app.send_static_file('index.html')
 
 if __name__ == '__main__':
-    app = create_app()
     app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
