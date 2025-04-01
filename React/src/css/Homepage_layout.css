@@ -1,0 +1,13 @@
+.Homepage_layout {
+    display: flex; /* Use Flexbox to arrange cards in a row */
+    flex-wrap: wrap; /* Prevent wrapping to the next row */
+    gap: 5px; /* Add spacing between cards */
+    justify-content: space-between; /* Distribute cards evenly across the row */
+    padding: 10px; /* Add padding around the dashboard */
+  }
+  
+  .inventory-card {
+    flex-basis: calc(20% - 10px); /* Each card takes up one-fourth of the row */
+  }
+  
+  
