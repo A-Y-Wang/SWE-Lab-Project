@@ -22,7 +22,7 @@ try:
     mongo = PyMongo(app)
     client = mongo.cx
     # Test connection
-    db = client['inventory_system']
+    db = client['inventory_system'] #db is the inventory_system database, just deal with it I don't want to change working code
     db.command('ping')
     print("MongoDB connection successful!")
     print(f"Available collections: {db.list_collection_names()}")
@@ -36,17 +36,6 @@ projects_db = client["Projects"]
 
 user_collection = user_db["UserLogin"]
 
-# Helper function to serialize MongoDB documents
-def doc_to_dict(doc):
-    if doc is None:
-        return None
-    doc_dict = dict(doc)
-    for key, value in doc_dict.items():
-        if isinstance(value, ObjectId):
-            doc_dict[key] = str(value)
-        elif isinstance(value, datetime):
-            doc_dict[key] = value.isoformat()
-    return doc_dict
 
 #password encryption stuff
 passN = 2
