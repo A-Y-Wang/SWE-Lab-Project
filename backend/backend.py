@@ -20,8 +20,9 @@ print(mongo_uri)
 app.config["MONGO_URI"] = mongo_uri
 try:
     mongo = PyMongo(app)
+    client = mongo.cx
     # Test connection
-    db = mongo.cx['inventory_system']
+    db = client['inventory_system']
     db.command('ping')
     print("MongoDB connection successful!")
     print(f"Available collections: {db.list_collection_names()}")
@@ -29,6 +30,69 @@ except Exception as e:
     print(f"MongoDB connection error: {e}")
     # Continue running even with error to see additional debug info
 
+user_db = client["UserInfo"]
+inventory_db = client["inventory_system"] #don't specify the collections here
+projects_db = client["Projects"]
+
+user_collection = user_db["UserLogin"]
+
+# Helper function to serialize MongoDB documents
+def doc_to_dict(doc):
+    if doc is None:
+        return None
+    doc_dict = dict(doc)
+    for key, value in doc_dict.items():
+        if isinstance(value, ObjectId):
+            doc_dict[key] = str(value)
+        elif isinstance(value, datetime):
+            doc_dict[key] = value.isoformat()
+    return doc_dict
+
+# User Routes
+@app.route('/signup', methods=['POST'])
+def create_user():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        if not username or not password:
+            return jsonify({"error": "Missing username or password"}), 400
+        existing_user = user_collection.find_one({"Username": username})
+        if existing_user:
+            return jsonify({"error": "User already exists"}), 409
+        doc = {
+            "Username": username,
+            "Password": password,
+            "UserId": user_collection.count_documents({}) + 1,
+            "ProjectIds": []
+        }
+        user_collection.insert_one(doc)
+        return jsonify({"message": "Successfully registered", "redirect": "/checkout"}), 201
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"error": "Server error"}), 500
+
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        if not username or not password:
+            return jsonify({"error": "Missing username or password"}), 400
+        user = user_collection.find_one({"Username": username})
+        if user:
+            if password == user.get("Password"):
+                return jsonify({"message": "Login success", "redirect": "/checkout"}), 200
+            else:
+                return jsonify({"error": "Incorrect password"}), 401
+        else:
+            return jsonify({"error": "User does not exist"}), 404
+    except Exception as e:
+        print("Database error:", e)
+        return jsonify({"error": "Server error"}), 500
+    
+#Inventory Routes
 # Helper function to serialize ObjectId
 def serialize_objectid(obj):
     if isinstance(obj, ObjectId):

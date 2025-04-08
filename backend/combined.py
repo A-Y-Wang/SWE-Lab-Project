@@ -15,31 +15,28 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
 
 # MongoDB Configuration
-inventory_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/inventory_system")
-user_uri = "mongodb+srv://swelabteam:0njGARlJosA7m0B4@userstuff.vmqiy.mongodb.net/?retryWrites=true&w=majority&appName=UserStuff"
+mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/inventory_system")
+print(mongo_uri)
 
 # Connect to Inventory Database
-app.config["MONGO_URI"] = inventory_uri
-inventory_mongo = PyMongo(app)
-inventory_db = inventory_mongo.cx['inventory_system']
+app.config["MONGO_URI"] = mongo_uri
+try:
+    mongo = PyMongo(app)
+    client = mongo.cx
+    # Test connection
+    db = client['inventory_system']
+    db.command('ping')
+    print("MongoDB connection successful!")
+    print(f"Available collections: {db.list_collection_names()}")
+except Exception as e:
+    print(f"MongoDB connection error: {e}")
+    # Continue running even with error to see additional debug info
 
-# Connect to User Database
-user_client = MongoClient(user_uri, server_api=ServerApi('1'))
-user_db = user_client["UserStuff"]
+user_db = client["UserInfo"]
+inventory_db = client["inventory_system"] #don't specify the collections here
+projects_db = client["Projects"]
+
 user_collection = user_db["UserLogin"]
-
-try:
-    inventory_db.command('ping')
-    print("Connected to Inventory MongoDB!")
-    print(f"Available collections: {inventory_db.list_collection_names()}")
-except Exception as e:
-    print(f"Inventory MongoDB connection error: {e}")
-
-try:
-    user_client.admin.command('ping')
-    print("Connected to User MongoDB!")
-except Exception as e:
-    print(e)
 
 # Helper function to serialize MongoDB documents
 def doc_to_dict(doc):
@@ -153,7 +150,4 @@ def delete_inventory_item(item_id):
         return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
-    try:
-        app.run(debug=True)
-    finally:
-        user_client.close()
+    app.run(debug=True)
