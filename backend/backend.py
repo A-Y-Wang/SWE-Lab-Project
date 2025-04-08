@@ -31,11 +31,9 @@ except Exception as e:
     # Continue running even with error to see additional debug info
 
 user_db = client["UserInfo"]
-inventory_db = client["inventory_system"] #don't specify the collections here
 projects_db = client["Projects"]
 
 user_collection = user_db["UserLogin"]
-
 
 #password encryption stuff
 passN = 2
@@ -82,7 +80,7 @@ def login():
             decryptedpass=decrypt(user.get("Password"),passN,passD)
 
             if password == decryptedpass:
-                return jsonify({"message": "Login success", "redirect": "/checkout"}), 200
+                return jsonify(doc_to_dict(user)), 200
             else:
                 return jsonify({"error": "Incorrect password"}), 401
         else:
@@ -146,8 +144,8 @@ def doc_to_dict(doc):
         elif isinstance(value, datetime):
             doc_dict[key] = value.isoformat()
     return doc_dict
-
-# Inventory Routes
+#Project+Inventory Routes
+# @app.route('/api/user/<userID')
 @app.route('/api/inventory', methods=['GET'])
 def get_all_inventory():
     items = list(db.inventory.find())

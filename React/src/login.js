@@ -19,6 +19,9 @@ export default function LoginPage() {
       });
 
       if (response.status === 200)  {
+        const userdata = response.data; //a successful login will send the user document back
+        console.log(userdata)
+        localStorage.setItem('user', JSON.stringify(userdata)); //storing user data in a local storage
         navigate("/checkout"); //redirects to new page
       } else {
         alert(response.data.error);

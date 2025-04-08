@@ -6,9 +6,12 @@ import "./css/App.css"
 const ItemList = () => {
     const[items, setItems] = useState([]);
     const [expandedItems, setExpandedItems] = useState({});
-    const [clickedItems, setClickedItems] = useState({}); 
+    const [clickedCheckoutItems, setClickedCheckoutItems] = useState({}); 
+    const [clickedCheckinItems, setClickedCheckinItems] = useState({}); 
     const [checkoutQuantities, setCheckoutQuantities] = useState({});
+    const [checkinQuantities, setCheckinQuantities] = useState({});
 
+    //API routes
     const fetchInventory = () => {
       fetch('http://localhost:5000/api/inventory')
         .then((res) => res.json())
@@ -59,15 +62,54 @@ const ItemList = () => {
           });
         }
         setCheckoutQuantities(prev => ({ ...prev, [id]: "" }));
-        setClickedItems(prev => ({ ...prev, [id]: true }));
+        setClickedCheckoutItems(prev => ({ ...prev, [id]: true }));
       
         setTimeout(() => {
-          setClickedItems(prev => ({ ...prev, [id]: false }));
+          setClickedCheckoutItems(prev => ({ ...prev, [id]: false }));
         }, 3000);
       };
 
+    const checkinButton = (id) => {
+      const inputQuantity = parseInt(checkinQuantities[id], 10)
+
+      if(!isNaN(inputQuantity)&&inputQuantity>0){
+        const item = items.find((item)=> item._id === id);
+        if(!item)return;
+
+        const newQuantity = item.quantity + inputQuantity;
+        const updatedQuantity = newQuantity > item.capacity ? item.capacity : newQuantity;
+
+        fetch(`http://localhost:5000/api/inventory/${id}`,{
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body : JSON.stringify({quantity:updatedQuantity})
+        })
+          .then((res)=>{
+            if(!res.ok){
+              throw new Error("Failed to update item");
+            }
+            return res.json();
+          })
+          .then(()=>{
+            fetchInventory();
+          })
+          .catch((error)=>{
+            console.error("Error updating item:", error);
+          });
+      }
+      setCheckinQuantities((prev) => ({ ...prev, [id]: "" }));
+      setClickedCheckinItems((prev) => ({ ...prev, [id]: true }));
+      setTimeout(() => {
+        setClickedCheckinItems((prev) => ({ ...prev, [id]: false }));
+      }, 3000);
+    };
+    
+
       
   
+    //displaying the page
     return (
       <>
         {items.map((item) => (
@@ -79,35 +121,49 @@ const ItemList = () => {
 
                 </div>
                 <div className="details-container">
-                  <p><strong>Quantity:</strong> {item.quantity}</p>
+                  <p><strong>Quantity:</strong> {item.quantity}/{item.capacity}</p>
                 </div>
-                <button onClick = {() => dropDetails(item._id)}>
-                    {expandedItems[item._id] ? "Less" : "More"}
-                </button>
+                <div className="right-side">
+                <div className = "checkout-box">
+                  <input
+                    type="number"
+                    placeholder="Enter Quantity"
+                    value={checkoutQuantities[item._id] || ""}
+                    onChange={(e) =>
+                      setCheckoutQuantities(prev => ({
+                        ...prev,
+                        [item._id]: e.target.value,
+                      }))
+                    }
+                  />
+                  <button 
+                      className={`toggle-btn ${clickedCheckoutItems[item._id] ? "green" : ""}`} 
+                      onClick={() => checkoutButton(item._id)}
+                  >
+                      {clickedCheckoutItems[item._id] ? "Complete!" : "Checkout"}
+                  </button>
+                </div>
+                <div className="checkin-box">
+                  <input
+                    type="number"
+                    placeholder="Enter Quantity"
+                    value={checkinQuantities[item._id] || ""}
+                    onChange={(e) =>
+                      setCheckinQuantities((prev)=>({
+                        ...prev,
+                        [item._id]: e.target.value,
+                      }))
+                    }
+                  />
+                  <button
+                      className={`toggle-btn ${clickedCheckinItems[item._id] ? "green" : ""}`}
+                      onClick={() => checkinButton(item._id)}
+                  >
+                      {clickedCheckinItems[item._id] ? "Complete!" : "Checkin"}
+                  </button>
+                </div>
+              </div>
             </div>
-            
-            {expandedItems[item._id] && (
-               <div className = "details-box show">
-                <input
-                  type="number"
-                  placeholder="Enter Quantity"
-                  value={checkoutQuantities[item._id] || ""}
-                  onChange={(e) =>
-                    setCheckoutQuantities(prev => ({
-                      ...prev,
-                      [item._id]: e.target.value,
-                    }))
-                  }
-                />
-
-                <button 
-                    className={`toggle-btn ${clickedItems[item._id] ? "green" : ""}`} 
-                    onClick={() => checkoutButton(item._id)}
-                >
-                    {clickedItems[item._id] ? "Complete!" : "Checkout"}
-                </button>
-               </div>
-            )}
           </div>
         ))}
       </>
