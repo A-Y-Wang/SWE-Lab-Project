@@ -48,6 +48,10 @@ def doc_to_dict(doc):
             doc_dict[key] = value.isoformat()
     return doc_dict
 
+#password encryption stuff
+passN = 2
+passD = 1
+
 # User Routes
 @app.route('/signup', methods=['POST'])
 def create_user():
@@ -60,9 +64,12 @@ def create_user():
         existing_user = user_collection.find_one({"Username": username})
         if existing_user:
             return jsonify({"error": "User already exists"}), 409
+        
+        encryptedpass = encrypt(password,passN,passD)
+        
         doc = {
             "Username": username,
-            "Password": password,
+            "Password": encryptedpass,
             "UserId": user_collection.count_documents({}) + 1,
             "ProjectIds": []
         }
@@ -82,7 +89,10 @@ def login():
             return jsonify({"error": "Missing username or password"}), 400
         user = user_collection.find_one({"Username": username})
         if user:
-            if password == user.get("Password"):
+
+            decryptedpass=decrypt(user.get("Password"),passN,passD)
+
+            if password == decryptedpass:
                 return jsonify({"message": "Login success", "redirect": "/checkout"}), 200
             else:
                 return jsonify({"error": "Incorrect password"}), 401
@@ -91,7 +101,43 @@ def login():
     except Exception as e:
         print("Database error:", e)
         return jsonify({"error": "Server error"}), 500
-    
+
+def encrypt(inputText, n, d):
+    if d!=1 and d!=-1:
+        return inputText
+    if n<1:
+        return inputText
+    flip = ""
+    for c in inputText:
+        flip = c + flip
+    final = ""
+    for c in flip:
+        see = ord(c)+n*d
+        if see>126 or see<34:
+            temp = chr(((see-34)%93)+34)
+        else:
+            temp = chr(see)
+        final += temp
+    return final
+
+def decrypt(inputText, n,d):
+    if d!=1 and d!=-1:
+        return inputText
+    if n<1:
+        return inputText
+    flip = ""
+    for c in inputText:
+        flip = c + flip
+    final = ""
+    for c in flip:
+        see = ord(c)+n*d*(-1)
+        if see>126 or see<34:
+            temp = chr(((see-34)%93)+34)
+        else:
+            temp = chr(see)
+        final += temp
+    return final
+
 #Inventory Routes
 # Helper function to serialize ObjectId
 def serialize_objectid(obj):
