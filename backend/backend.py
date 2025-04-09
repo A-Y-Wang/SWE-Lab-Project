@@ -34,6 +34,7 @@ user_db = client["UserInfo"]
 projects_db = client["Projects"]
 
 user_collection = user_db["UserLogin"]
+projects_collection = projects_db["Project1"]
 
 #password encryption stuff
 passN = 2
@@ -125,7 +126,7 @@ def decrypt(inputText, n,d):
         final += temp
     return final
 
-#Inventory Routes
+
 # Helper function to serialize ObjectId
 def serialize_objectid(obj):
     if isinstance(obj, ObjectId):
@@ -144,8 +145,36 @@ def doc_to_dict(doc):
         elif isinstance(value, datetime):
             doc_dict[key] = value.isoformat()
     return doc_dict
+
+
 #Project+Inventory Routes
-# @app.route('/api/user/<userID')
+@app.route('/api/user/<userId>/projects/inventory', methods=["GET"])
+def get_projects_inventory(userId):
+    user = user_db["UserLogin"].find_one({"UserId": int(userId)})
+    if not user:
+        return jsonify({"error: User not found"}), 404
+    
+    project_ids = user.get("ProjectIds", [])
+    if not project_ids:
+        return jsonify([])
+    #list of projects where project_id is in project_ids
+    projects = list(projects_collection.find({"project_id": {"$in":project_ids}}))
+    projectItems=[]
+
+    for project in projects:
+        item_ids = project.get("items", [])
+        itemsPerProj = db.inventory.find({"item_id":{"$in": item_ids}})
+        itemsson = [doc_to_dict(item) for item in itemsPerProj]
+
+        project_data ={
+            "project_id": str(project["project_id"]),
+            "project_name": project.get("project_name", "Unamed Project"),
+            "items": itemsson
+        }
+        projectItems.append(project_data)
+    return jsonify(projectItems), 200
+
+#Inventory Routes
 @app.route('/api/inventory', methods=['GET'])
 def get_all_inventory():
     items = list(db.inventory.find())

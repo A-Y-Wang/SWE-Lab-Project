@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './css/checkout.css';
-import ItemList from './Items';
+import ProjectItemList from './Items';
 import "./css/App.css"
 
 
@@ -24,7 +24,7 @@ function Checkout() {
             )}
             <div className="scroll-bar items">
                 <h1>Checkout Items</h1>
-                <ItemList />
+                {user && <ProjectItemList user = {user} />}
             </div>
         </div>
     )
