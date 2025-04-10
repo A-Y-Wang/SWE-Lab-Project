@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import './css/signup.css';
 
 export default function SignUp() {
@@ -17,17 +16,26 @@ export default function SignUp() {
         return
       }
       try{
-        const response = await axios.post("/signup", {
-          username: username,
-          password: password
+        await fetch("/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
+        })
+        .then((response) => {
+          if(response.status === 201){
+            navigate("/");
+          }
+          else{
+            alert(response.data.error);
+          }
         })
 
-        if(response.status === 201){
-          navigate("/");
-        }
-        else{
-          alert(response.data.error);
-        }
+        
       } catch (error) {
         console.error("registration failed",error);
         alert("Registration Failed, Try again");
