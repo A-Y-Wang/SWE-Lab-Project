@@ -169,6 +169,7 @@ def get_projects_inventory(userId):
         project_data ={
             "project_id": str(project["project_id"]),
             "project_name": project.get("project_name", "Unamed Project"),
+            "project_description": project.get("description"),
             "items": itemsson
         }
         projectItems.append(project_data)

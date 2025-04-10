@@ -23,7 +23,7 @@ export default function SignUp() {
         })
 
         if(response.status === 201){
-          navigate("/login");
+          navigate("/");
         }
         else{
           alert(response.data.error);
