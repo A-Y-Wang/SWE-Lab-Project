@@ -22,7 +22,7 @@ const D_ProjectCard = ({ project = null }) => {
   const [selectedQuantity, setSelectedQuantity] = useState(0);
   const [selectedUser, setSelectedUser] = useState('');
   
-  // State for button label ("JOIN" or "LEAVE")
+  // State for button label ("JOin" or "Leave")
   const [isJoined, setIsJoined] = useState(false);
   
   // Placeholder user name - this would typically come from the logged-in user
@@ -96,7 +96,8 @@ const D_ProjectCard = ({ project = null }) => {
       </div>
 
       <div className="attribute item-quantity">
-        Number of Items: {selectedQuantity}
+        <label>Quantity: </label>
+        <span>{selectedQuantity}</span>
       </div>
 
       <div className="attribute users-dropdown">

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './css/D_addProjectCard.css';
 
+//Need to import user from backend  const userId = user ? user.UserId : null;
+
 const D_addProjectCard = (props) => {
     // State for input fields
     const [projectName, setProjectName] = useState('');
@@ -15,7 +17,7 @@ const D_addProjectCard = (props) => {
         setProjectDescription(event.target.value);
     };
 
-    // Placeholder add functionality
+    // Placeholder add functionality 
     const handleAddClick = () => {
         console.log('Adding Project:', { projectName, projectDescription });
         if (props.onAddProject) {
