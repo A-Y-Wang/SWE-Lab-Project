@@ -13,7 +13,7 @@ export default function LoginPage() {
     console.log("Username:", username, "Password:", password);
     //add login logic here
     try{
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post("/login", {
         username: username,
         password: password,
       });
