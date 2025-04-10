@@ -11,7 +11,7 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
-CORS(app, origins=["*"])
+CORS(app, origins=["https://team2-swe-project-9d360b48d501.herokuapp.com/"])
 
 @app.route('/')
 def index():
