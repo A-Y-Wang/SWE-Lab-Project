@@ -1,0 +1,46 @@
+/* Dashboard container */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Search container styling */
+  .search-container {
+    width: 100%;
+    background-color: #f8d7da; /* Pink background as shown in image */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Search input styling */
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* Projects container */
+  .projects-container {
+    margin-bottom: 20px;
+  }
+  
+  /* Add project container */
+  .add-project-container {
+    margin-top: 20px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .search-input {
+      width: 100%;
+    }
+  }
+  

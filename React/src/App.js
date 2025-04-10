@@ -5,6 +5,7 @@ import LoginPage from './login';
 import Navbar from './Navbar';
 import Checkout from './checkout'; 
 import SignUp from './signup'; 
+import Dashboard from './dashboard';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/checkout" element={<Checkout />} /> {/* Define the route for the new page */}
+          <Route path="/checkout" element={<Checkout />} /> 
+          <Route path="/dashboard" element={<Dashboard />} /> {/* Define the route for the dashboard */}
         </Routes>
       </div>
     </Router>
