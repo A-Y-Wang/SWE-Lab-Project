@@ -1,0 +1,70 @@
+.add-project-card-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px auto;
+    background-color: #ccc19f; 
+    border-radius: 8px;
+    width: 95%
+}
+
+.attribute-input {
+    flex-grow: 1;
+    margin: 0 10px;
+    text-align: center;
+    padding: 10px;
+    background-color: #2c3e50; /* Updated dark gray/blue boxes */
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    height: 30px; /* Set consistent height for all attributes */
+    display: flex; /* Flexbox for vertical alignment */
+    align-items: center; /* Center content vertically */
+}
+
+.attribute-input input {
+    width: 90%;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 1rem;
+    justify-content: center; /* Center align horizontally */
+
+}
+
+.add-button-container {
+    margin-left: 5px; /* Adds spacing between inputs and add button */
+    
+}
+
+.add-button {
+    background-color: #584937; /* Matches red button */
+    color: #fff;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #c0392b; /* Slightly darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-project-card-horizontal {
+        flex-wrap: wrap; /* Stack elements vertically on smaller screens */
+        justify-content: center;
+        gap: 10px; /* Add spacing between rows */
+    }
+
+    .attribute-input {
+        width: calc(50% - 20px); /* Adjust width for two columns */
+        margin-bottom: 10px; /* Add spacing between rows */
+        text-align: center; /* Center text in smaller screens */
+        padding-top: unset;
+    }
+
+    .add-button-container {
+        width: calc(50% - 20px); /* Ensure consistent width with input fields */
+        justify-content: center; /* Center the button horizontally */
+        margin-bottom: 10px; /* Add spacing on smaller screens */
+    }
+}
