@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.95213cc8.css",
-    "main.js": "/static/js/main.fff927f4.js",
+    "main.js": "/static/js/main.2574422d.js",
     "static/js/453.1bd01923.chunk.js": "/static/js/453.1bd01923.chunk.js",
     "static/media/stardew.ttf": "/static/media/stardew.9f9807c37ffbd70c403d.ttf",
     "static/media/stardew_backdrop.png": "/static/media/stardew_backdrop.abe81220aca4be59c87c.png",
@@ -9,11 +9,11 @@
     "static/media/svthin.ttf": "/static/media/svthin.f380b88515c409cae753.ttf",
     "index.html": "/index.html",
     "main.95213cc8.css.map": "/static/css/main.95213cc8.css.map",
-    "main.fff927f4.js.map": "/static/js/main.fff927f4.js.map",
+    "main.2574422d.js.map": "/static/js/main.2574422d.js.map",
     "453.1bd01923.chunk.js.map": "/static/js/453.1bd01923.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.95213cc8.css",
-    "static/js/main.fff927f4.js"
+    "static/js/main.2574422d.js"
   ]
 }
