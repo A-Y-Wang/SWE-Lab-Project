@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./css/login.css"
 
 export default function LoginPage() {
@@ -13,19 +12,27 @@ export default function LoginPage() {
     console.log("Username:", username, "Password:", password);
     //add login logic here
     try{
-      const response = await axios.post("http://localhost:5000/login", {
-        username: username,
-        password: password,
-      });
-
-      if (response.status === 200)  {
-        const userdata = response.data; //a successful login will send the user document back
-        console.log(userdata)
-        localStorage.setItem('user', JSON.stringify(userdata)); //storing user data in a local storage
-        navigate("/checkout"); //redirects to new page
-      } else {
-        alert(response.data.error);
-      }
+      await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const userdata = response.data; //a successful login will send the user document back
+          console.log(userdata);
+          localStorage.setItem('user', JSON.stringify(userdata)); //storing user data in a local storage
+          navigate("/checkout"); //redirects to new page
+        } else {
+          alert(response.data.error);
+        }
+      })
+      
     } catch (error) {
       console.error("Login failed",error);
       alert("Login Failed, Try again");

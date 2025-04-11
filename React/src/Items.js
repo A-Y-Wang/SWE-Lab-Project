@@ -17,7 +17,7 @@ const ProjectItemList = ({user}) => {
     //API routes
     const fetchProjects = () => {
       if(!userId) return;
-      fetch(`http://localhost:5000/api/user/${userId}/projects/inventory`)
+      fetch(`/api/user/${userId}/projects/inventory`)
         .then((res)=> res.json())
         .then((data) => {
           console.log("Fetched projects with items:", data);
@@ -59,7 +59,7 @@ const ProjectItemList = ({user}) => {
         const newQuant = item.quantity - inputQuantity
         const updatedQuant = newQuant >= 0? newQuant : 0;
 
-        fetch(`http://localhost:5000/api/inventory/${id}`, {
+        fetch(`/api/inventory/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ const ProjectItemList = ({user}) => {
         const newQuantity = item.quantity + inputQuantity;
         const updatedQuantity = newQuantity > item.capacity ? item.capacity : newQuantity;
 
-        fetch(`http://localhost:5000/api/inventory/${id}`,{
+        fetch(`/api/inventory/${id}`,{
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
