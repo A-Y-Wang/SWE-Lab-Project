@@ -1,57 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import D_ProjectCard from './D_ProjectCard';
 import D_addProjectCard from './D_addProjectCard';
 import './css/dashboard.css';
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  // const userId = user ? user.UserId : null;
-
-  // Retrieve the user data from localStorage when the component mounts
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem('user');
-  //   if (storedUser) {
-  //     setUser(JSON.parse(storedUser));
-  //   }
-  // }, []);
-
-  // const getProjects = () =>{
-  //   if(!userId) return;
-
-
-  // }
-  const [projects, setProjects] = useState([
-    {
-      project_name: "Project 1",
-      project_id: "001",
-      description: "Description for Project Alpha",
-      users: ["Alice", "Bob", "Charlie"],
-      items: [
-        { item_name: "Hardware A", quantity: 10 },
-        { item_name: "Hardware B", quantity: 7 },
-      ],
-    },
-    {
-      project_name: "Project 2",
-      project_id: "002",
-      description: "Description for Project Beta",
-      users: ["David", "Eve", "Frank"],
-      items: [
-        { item_name: "Hardware C", quantity: 4 },
-        { item_name: "Hardware D", quantity: 6 },
-      ],
-    },
-    {
-      project_name: "Project 3",
-      project_id: "003",
-      description: "Description for Project Gamma",
-      users: ["Grace", "Heidi", "Ivan"],
-      items: [
-        { item_name: "Hardware E", quantity: 8 },
-        { item_name: "Hardware F", quantity: 2 },
-      ],
-    },
-  ]);
+    const [user, setUser] = useState(null);
+    
+    // Retrieve user data from localStorage
+    useEffect(() => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }, []);
+  
+    // Function to fetch all projects
+    const getProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        
+        return await response.json();
+      } catch (err) {
+        console.print("Failed to fetch projects:", err);
+        // Return default projects if API call fails
+        return [
+          { project_name: "Project 1", project_id: "001", description: "Description for Project Alpha", users: ["Alice", "Bob", "Charlie"], items: [ { item_name: "Hardware A", quantity: 10 }, { item_name: "Hardware B", quantity: 7 }, ] },
+          { project_name: "Project 2", project_id: "002", description: "Description for Project Beta", users: ["David", "Eve", "Frank"], items: [ { item_name: "Hardware C", quantity: 4 }, { item_name: "Hardware D", quantity: 6 }, ] },
+          { project_name: "Project 3", project_id: "003", description: "Description for Project Gamma", users: ["Grace", "Heidi", "Ivan"], items: [ { item_name: "Hardware E", quantity: 8 }, { item_name: "Hardware F", quantity: 2 }, ] },
+        ];
+      }
+    };
+  
+    // Initialize projects state
+    const [projects, setProjects] = useState([]);
+  
+    // Fetch projects when component mounts
+    useEffect(() => {
+      const fetchData = async () => {
+        const projectData = await getProjects();
+        setProjects(projectData);
+      };
+      
+      fetchData();
+    }, []);
 
   // State for search query
   const [searchQuery, setSearchQuery] = useState('');

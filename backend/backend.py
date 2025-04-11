@@ -461,6 +461,42 @@ def inventory_stats():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+# API Call Projects
+@app.route('/api/projects', methods=['GET'])
+def get_all_projects():
+    try:
+        # Get all projects from the Projects.Project1 collection
+        projects = list(projects_collection.find())
+        result = []
+        
+        for project in projects:
+            # Format basic project information based on actual structure seen in image
+            project_data = {
+                "project_name": project.get("project_name", "Unnamed Project"),
+                "project_id": project.get("project_id", ""),
+                "description": project.get("description", ""),
+                "users": project.get("users", []),
+                "items": []
+            }
+            
+            # Get items for this project
+            item_ids = project.get("items", [])
+            if item_ids:
+                items = db.inventory.find({"item_id": {"$in": item_ids}})
+                for item in items:
+                    item_dict = doc_to_dict(item)
+                    project_data["items"].append({
+                        "item_name": item_dict.get("item_name", "Unknown Item"),
+                        "quantity": item_dict.get("quantity", 0)
+                    })
+            
+            result.append(project_data)
+        
+        return jsonify(result), 200
+    except Exception as e:
+        print(f"Error fetching projects: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
     #comment to false later
