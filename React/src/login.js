@@ -22,9 +22,10 @@ export default function LoginPage() {
           password: password,
         }),
       })
-      .then((response) => {
+      .then(async(response) => {
         if (response.status === 200) {
-          const userdata = response.data; //a successful login will send the user document back
+          // const userdata = response.data; //a successful login will send the user document back
+          const userdata = await response.json();
           console.log(userdata);
           localStorage.setItem('user', JSON.stringify(userdata)); //storing user data in a local storage
           navigate("/checkout"); //redirects to new page
