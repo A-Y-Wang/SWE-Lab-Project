@@ -18,7 +18,7 @@ def index():
     return app.send_static_file('index.html')
 
 # Get MongoDB URI from environment or use default
-mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/inventory_system")
+mongo_uri = os.getenv("MONGO_URI", "mongodb+srv://swelabteam:swelabteam@inventorydata.i4qua.mongodb.net/?retryWrites=true&w=majority&appName=InventoryData")
 print(mongo_uri)
 
 app.config["MONGO_URI"] = mongo_uri
