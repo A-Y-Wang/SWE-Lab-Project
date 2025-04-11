@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import './css/checkout.css';
 import ProjectItemList from './Items';
 import "./css/App.css"
@@ -6,6 +7,7 @@ import "./css/App.css"
 
 function Checkout() {
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     // Retrieve the user data from localStorage when the component mounts
     useEffect(() => {
@@ -15,6 +17,11 @@ function Checkout() {
       }
     }, []);
 
+    const handleDashboardClick = () =>{
+      navigate('/dashboard');
+    };
+
+
     return (
         <div className="app-container">
             {user ? (
@@ -22,6 +29,7 @@ function Checkout() {
             ) : (
             <h1>Loading...</h1>
             )}
+            <button onClick={handleDashboardClick}>Dashboard</button>
             <div className="scroll-bar items">
                 <h1>Checkout Items</h1>
                 {user && <ProjectItemList user = {user} />}

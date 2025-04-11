@@ -130,74 +130,87 @@ const ProjectItemList = ({user}) => {
     //displaying the page
     return (
       <>
-      {projects.map((project)=>(
-        <div key={project.project_id} className="project-container">
-          <div className="project-header">
-            <h3>{project.project_name}</h3>
-            <h3>Desciption: {project.project_description}</h3>
-          </div>
-          {project.items && project.items.length > 0 ? (
-            project.items.map((item) => (
-            <div key={item._id} className="item-container">
-              <div className="item-block">
-                  <div className="item-details">
-                      <p><strong>Name:</strong> {item.item_name}</p>
-                      <p><strong>Decription:</strong> {item.description}</p>
-
-                  </div>
-                  <div className="details-container">
-                    <p><strong>Quantity:</strong> {item.quantity}/{item.capacity}</p>
-                  </div>
-                  <div className="right-side">
-                  <div className = "checkout-box">
-                    <input
-                      type="number"
-                      placeholder="Enter Quantity"
-                      value={checkoutQuantities[item._id] || ""}
-                      onChange={(e) =>
-                        setCheckoutQuantities(prev => ({
-                          ...prev,
-                          [item._id]: e.target.value,
-                        }))
-                      }
-                    />
-                    <button 
-                        className={`toggle-btn ${clickedCheckoutItems[item._id] ? "green" : ""}`} 
-                        onClick={() => checkoutButton(item._id)}
-                    >
-                        {clickedCheckoutItems[item._id] ? "Complete!" : "Checkout"}
-                    </button>
-                  </div>
-                  <div className="checkin-box">
-                    <input
-                      type="number"
-                      placeholder="Enter Quantity"
-                      value={checkinQuantities[item._id] || ""}
-                      onChange={(e) =>
-                        setCheckinQuantities((prev)=>({
-                          ...prev,
-                          [item._id]: e.target.value,
-                        }))
-                      }
-                    />
-                    <button
-                        className={`toggle-btn ${clickedCheckinItems[item._id] ? "green" : ""}`}
-                        onClick={() => checkinButton(item._id)}
-                    >
-                        {clickedCheckinItems[item._id] ? "Complete!" : "Checkin"}
-                    </button>
-                  </div>
-                </div>
+        {projects && projects.length > 0 ? (
+          projects.map((project) => (
+            <div key={project.project_id} className="project-container">
+              <div className="project-header">
+                <h3>{project.project_name}</h3>
+                <h3>Description: {project.project_description}</h3>
               </div>
+              {project.items && project.items.length > 0 ? (
+                project.items.map((item) => (
+                  <div key={item._id} className="item-container">
+                    <div className="item-block">
+                      <div className="item-details">
+                        <p>
+                          <strong>Name:</strong> {item.item_name}
+                        </p>
+                        <p>
+                          <strong>Description:</strong> {item.description}
+                        </p>
+                      </div>
+                      <div className="details-container">
+                        <p>
+                          <strong>Quantity:</strong> {item.quantity}/{item.capacity}
+                        </p>
+                      </div>
+                      <div className="right-side">
+                        <div className="checkout-box">
+                          <input
+                            type="number"
+                            placeholder="Enter Quantity"
+                            value={checkoutQuantities[item._id] || ""}
+                            onChange={(e) =>
+                              setCheckoutQuantities((prev) => ({
+                                ...prev,
+                                [item._id]: e.target.value,
+                              }))
+                            }
+                          />
+                          <button
+                            className={`toggle-btn ${
+                              clickedCheckoutItems[item._id] ? "green" : ""
+                            }`}
+                            onClick={() => checkoutButton(item._id)}
+                          >
+                            {clickedCheckoutItems[item._id] ? "Complete!" : "Checkout"}
+                          </button>
+                        </div>
+                        <div className="checkin-box">
+                          <input
+                            type="number"
+                            placeholder="Enter Quantity"
+                            value={checkinQuantities[item._id] || ""}
+                            onChange={(e) =>
+                              setCheckinQuantities((prev) => ({
+                                ...prev,
+                                [item._id]: e.target.value,
+                              }))
+                            }
+                          />
+                          <button
+                            className={`toggle-btn ${
+                              clickedCheckinItems[item._id] ? "green" : ""
+                            }`}
+                            onClick={() => checkinButton(item._id)}
+                          >
+                            {clickedCheckinItems[item._id] ? "Complete!" : "Checkin"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>There are no items for this project.</p>
+              )}
             </div>
-            ))
-          ) : (
-            <p> No items found for this project.</p>
-          )}
-          </div>
-          ))}
-        </>
-      );
-    };
+          ))
+        ) : (
+            <p>You have no projects.</p>
+        )}
+      </>
+    );
+  }
   
 export default ProjectItemList;

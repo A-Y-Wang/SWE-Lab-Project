@@ -4,6 +4,22 @@ import D_addProjectCard from './D_addProjectCard';
 import './css/dashboard.css';
 
 const Dashboard = () => {
+  const [user, setUser] = useState(null);
+  // const userId = user ? user.UserId : null;
+
+  // Retrieve the user data from localStorage when the component mounts
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem('user');
+  //   if (storedUser) {
+  //     setUser(JSON.parse(storedUser));
+  //   }
+  // }, []);
+
+  // const getProjects = () =>{
+  //   if(!userId) return;
+
+
+  // }
   const [projects, setProjects] = useState([
     {
       project_name: "Project 1",
