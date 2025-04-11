@@ -7,6 +7,7 @@ const D_addProjectCard = (props) => {
     // State for input fields
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
+    const [projectID, setProjectID] = useState('');
 
     // Handlers for input changes
     const handleNameChange = (event) => {
@@ -17,16 +18,21 @@ const D_addProjectCard = (props) => {
         setProjectDescription(event.target.value);
     };
 
+    const handleIDChange = (event) => {
+        setProjectID(event.target.value);
+    }
+
     // Placeholder add functionality 
     const handleAddClick = () => {
-        console.log('Adding Project:', { projectName, projectDescription });
+        console.log('Adding Project:', { projectName, projectDescription, projectID });
         if (props.onAddProject) {
-          props.onAddProject(projectName, projectDescription);
+          props.onAddProject(projectName, projectDescription, projectID);
         }
         
         // Reset fields
         setProjectName('');
         setProjectDescription('');
+        setProjectID('');
     };
 
     return (
@@ -48,6 +54,16 @@ const D_addProjectCard = (props) => {
                     placeholder="Enter Project Description"
                     value={projectDescription}
                     onChange={handleDescriptionChange}
+                />
+            </div>
+
+            {/* Input for Project ID */}
+            <div className="attribute-input">
+                <input
+                    type="text"
+                    placeholder="Enter Project ID"
+                    value={projectID}
+                    onChange={handleIDChange}
                 />
             </div>
 

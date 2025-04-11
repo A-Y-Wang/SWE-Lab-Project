@@ -84,6 +84,11 @@ const D_ProjectCard = ({ project = null }) => {
         {projectData.description}
       </div>
 
+      <div className="attribute project-ID">
+        <label>Project ID: </label>
+        {projectData.project_id}
+      </div>
+
       <div className="attribute items-dropdown">
         <label>Items: </label>
         <select value={selectedItem} onChange={handleItemChange}>

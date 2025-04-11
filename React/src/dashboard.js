@@ -3,7 +3,6 @@ import D_ProjectCard from './D_ProjectCard';
 import D_addProjectCard from './D_addProjectCard';
 import './css/dashboard.css';
 
-//Call projectData from Mongo Backend
 const Dashboard = () => {
   const [projects, setProjects] = useState([
     {
@@ -37,25 +36,39 @@ const Dashboard = () => {
       ],
     },
   ]);
-  
+
   // State for search query
   const [searchQuery, setSearchQuery] = useState('');
+  // State for error message
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Function to filter projects based on search query
-  const filteredProjects = projects.filter(project =>
-    project.project_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProjects = projects.filter(
+    (project) => project.project_id === searchQuery
   );
 
   // Function to handle adding a new project
-  const handleAddProject = (projectName, projectDescription) => {
-    const newProject = {
-      project_name: projectName,
-      project_id: `00${projects.length + 1}`,
-      description: projectDescription,
-      users: [],
-      items: [],
-    };
-    setProjects([...projects, newProject]);
+  const handleAddProject = (projectName, projectDescription, projectID) => {
+    // Check if a project with the same project_id already exists
+    const isDuplicate = projects.some(
+      (project) => project.project_id.toLowerCase() === projectID.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      // Display error message if duplicate found
+      setErrorMessage(`Error: A project with ID "${projectID}" already exists.`);
+    } else {
+      // Add the new project if no duplicate is found
+      const newProject = {
+        project_name: projectName,
+        project_id: projectID,
+        description: projectDescription,
+        users: [],
+        items: [],
+      };
+      setProjects([...projects, newProject]);
+      setErrorMessage(''); // Clear any previous error messages
+    }
   };
 
   return (
@@ -63,23 +76,26 @@ const Dashboard = () => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search Title"
+          placeholder="Search Project ID"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
       </div>
-      
+
+      {/* Display error message if it exists */}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+
       <div className="projects-container">
-        {filteredProjects.map((project, index) => (
-            <D_ProjectCard key={index} project={project} />
+        {/* Render only filtered projects */}
+        {filteredProjects.map((project) => (
+          <D_ProjectCard key={project.project_id} project={project} />
         ))}
       </div>
-      
+
       <div className="add-project-container">
         <D_addProjectCard onAddProject={handleAddProject} />
       </div>
-
     </div>
   );
 };

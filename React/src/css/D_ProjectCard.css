@@ -6,7 +6,6 @@
     margin: 10px auto;
     background-color: #ccc19f;
     border-radius: 8px;
-    width: 95%;
   }
   
   .attribute {
@@ -25,7 +24,7 @@
   }
   
   .project-name{
-    width: 100px; /* Fixed width */
+    width: 70px; /* Fixed width */
     flex-grow: 0;
     flex-shrink: 0;
     white-space: nowrap;
@@ -34,13 +33,23 @@
   }
 
   .project-description {
-    width: 200px; /* Fixed width */
+    width: 250px; /* Fixed width */
     flex-grow: 0;
     flex-shrink: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .project-ID{
+    width: 100px; /* Fixed width */
+    flex-grow: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   
   .items-dropdown, .users-dropdown {
     display: flex;
@@ -89,7 +98,8 @@
     border: none;
     padding: 10px;
     font-size: 1rem;
-    width: 40px;
+    justify-content: center;
+    width: 60px;
     height: 40px;
   }
   

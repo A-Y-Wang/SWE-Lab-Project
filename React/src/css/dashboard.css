@@ -1,6 +1,6 @@
 /* Dashboard container */
 .dashboard-container {
-    max-width: 1200px;
+    max-width: 2000px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -36,6 +36,20 @@
   .add-project-container {
     margin-top: 20px;
   }
+
+  /*Error Message adding*/
+  .error-message {
+    width: 100%;
+    background-color: #f8d7da; /* Pink background as shown in image */
+    padding: 10px;
+    color: red;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-top: 10px;
+    align-items: center;
+    font-weight: bold;
+  }
+  
   
   /* Responsive design */
   @media (max-width: 768px) {
