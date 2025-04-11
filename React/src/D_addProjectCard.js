@@ -41,7 +41,7 @@ const D_addProjectCard = (props) => {
             <div className="attribute-input">
                 <input
                     type="text"
-                    placeholder="Enter Title"
+                    placeholder="Enter Project Name"
                     value={projectName}
                     onChange={handleNameChange}
                 />

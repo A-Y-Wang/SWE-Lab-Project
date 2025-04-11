@@ -81,7 +81,7 @@ def login():
             decryptedpass=decrypt(user.get("Password"),passN,passD)
 
             if password == decryptedpass:
-                return jsonify(doc_to_dict(user)), 200
+                return jsonify(user), 200
             else:
                 return jsonify({"error": "Incorrect password"}), 401
         else:
@@ -460,7 +460,148 @@ def inventory_stats():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+#Projects Calls
+@app.route('/api/projects', methods=['GET'])
+def get_all_projects():
+    try:
+        # Get all projects from the Projects.Project1 collection
+        projects = list(projects_collection.find())
+        result = []
 
+        for project in projects:
+            # Format basic project information based on actual structure seen in image
+            project_data = {
+                "project_name": project.get("project_name", "Unnamed Project"),
+                "project_id": project.get("project_id", ""),
+                "description": project.get("description", ""),
+                "users": project.get("users", []),
+                "items": []
+            }
+            item_ids = project.get("items", [])
+            if item_ids:
+                items = db.inventory.find({"item_id": {"$in": item_ids}})
+                for item in items:
+                    item_dict = doc_to_dict(item)
+                    project_data["items"].append({
+                        "item_name": item_dict.get("item_name", "Unknown Item"),
+                        "quantity": item_dict.get("quantity", 0)
+                    })
+
+            result.append(project_data)
+
+        return jsonify(result), 200
+    except Exception as e:
+        print(f"Error fetching projects: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/user/<userId>/myprojects', methods=["GET"])
+def get_myprojects(userId):
+    user = user_db["UserLogin"].find_one({"UserId": int(userId)})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    project_ids = user.get("ProjectIds", [])
+    return jsonify(project_ids), 200
+
+@app.route('/api/projects', methods=['POST'])
+def create_project():
+    try:
+        data = request.get_json()
+
+        project_name = data.get('project_name')
+        project_id = data.get('project_id')
+        description = data.get('description', "")
+        users = data.get('users', [])
+        items = data.get('items', [])
+
+        if not project_name or not project_id:
+            return jsonify({"error": "Missing required fields: project_name or project_id"}), 400
+
+        # Check for duplicate project_id
+        existing_project = projects_collection.find_one({'project_id': project_id})
+        if existing_project:
+            return jsonify({"error": f"Project with ID '{project_id}' already exists."}), 400
+
+        # Build new project document
+        new_project = {
+            'project_name': project_name,
+            'project_id': project_id,
+            'description': description,
+            'users': users,
+            'items': items
+        }
+        # Insert into database
+        result = projects_collection.insert_one(new_project)
+
+        return jsonify({"message": "Project created successfully", "project_id": str(result.inserted_id)}), 201
+
+    except Exception as e:
+        print(f"Error creating project: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/user/joinProject', methods=["POST"])
+def join_project():
+    data = request.get_json()
+    userId = data.get('userId')
+    projectId = data.get('projectId')
+    
+    if not userId or not projectId:
+        return jsonify({"error": "Missing required fields: userId and projectId"}), 400
+
+    # Find the user document by converting userId to an integer if needed.
+    user = user_db["UserLogin"].find_one({"UserId": int(userId)})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Use $addToSet to add the projectId to the ProjectIds array only if it doesn't exist already.
+    user_update = user_db["UserLogin"].update_one(
+        {"UserId": int(userId)},
+        {"$addToSet": {"ProjectIds": projectId}}
+    )
+    project_update = projects_collection.update_one(
+        {"project_id": projectId},
+        {"$addToSet": {"users": int(userId)}}
+    )
+    
+    if user_update.modified_count or project_update.modified_count:
+        return jsonify({"message": "Project joined successfully", "projectId": projectId}), 200
+    else:
+        # If no changes were made, then the project was likely already joined.
+        return jsonify({"message": "Project already joined", "projectId": projectId}), 200
+
+
+@app.route('/api/user/leaveProject', methods=["POST"])
+def leave_project():
+    data = request.get_json()
+    userId = data.get('userId')
+    projectId = data.get('projectId')
+    
+    if not userId or not projectId:
+        return jsonify({"error": "Missing required fields: userId and projectId"}), 400
+
+    # Find the user document
+    user = user_db["UserLogin"].find_one({"UserId": int(userId)})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Use $pull to remove the projectId from the ProjectIds array.
+    user_update = user_db["UserLogin"].update_one(
+        {"UserId": int(userId)},
+        {"$pull": {"ProjectIds": projectId}}
+    )
+    
+    # Update the project document by removing the userId from the users array.
+    project_update = projects_collection.update_one(
+        {"project_id": projectId},
+        {"$pull": {"users": int(userId)}}
+    )
+    
+    if user_update.modified_count or project_update.modified_count:
+        return jsonify({"message": "Project left successfully", "projectId": projectId}), 200
+    else:
+        # This might mean the project id wasn't in the user's project list.
+        return jsonify({"message": "Project was not joined", "projectId": projectId}), 200
+    
 if __name__ == '__main__':
     app.run(debug=True)
     #comment to false later
