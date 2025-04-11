@@ -17,7 +17,7 @@ const ProjectItemList = ({user}) => {
     //API routes
     const fetchProjects = () => {
       if(!userId) return;
-      fetch(`http://localhost:5000/api/user/${userId}/projects/inventory`)
+      fetch(`/api/user/${userId}/projects/inventory`)
         .then((res)=> res.json())
         .then((data) => {
           console.log("Fetched projects with items:", data);
