@@ -10,10 +10,16 @@ class InventoryAPITester:
         self.client = httpx.AsyncClient(timeout=10.0)
         self.test_item_id = None
         self.test_checkout_id = None
+        self.test_project_id = None
+        self.test_user_id = None
 
     async def run_all_tests(self):
         """Run all API tests in sequence"""
         print("🚀 Starting API tests...\n")
+        
+        # User Tests (needed for project tests)
+        await self.test_user_signup()
+        await self.test_user_login()
         
         # Inventory Tests
         await self.test_add_inventory_item()
@@ -30,13 +36,79 @@ class InventoryAPITester:
         
         # Stats and Additional Tests
         await self.test_inventory_stats()
+        
+        # Project Tests
+        await self.test_create_project()
+        await self.test_get_all_projects()
+        await self.test_get_project()
+        await self.test_update_project()
+        await self.test_add_item_to_project()
+        await self.test_get_project_items()
+        await self.test_get_user_projects()
+        await self.test_remove_item_from_project()
+        
+        # Cleanup Tests
+        await self.test_delete_project()
         await self.test_delete_inventory_item()
         
         print("\n✅ All tests completed!")
+    
+    async def test_user_signup(self):
+        """Test signing up a user"""
+        print("Testing POST /signup - Register a new user")
+        
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        user_data = {
+            "username": f"testuser_{timestamp}",
+            "password": "testpassword123"
+        }
+        
+        response = await self.client.post(
+            f"{self.base_url}/signup",
+            json=user_data,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 201:
+            data = response.json()
+            print(f"✅ Successfully registered user: {user_data['username']}")
+        else:
+            print(f"❌ Failed to register user: {response.text}")
+            
+        return response
+    
+    async def test_user_login(self):
+        """Test logging in a user"""
+        print("\nTesting POST /login - Login with credentials")
+        
+        # Assuming we have a user from the signup test or use a known test user
+        login_data = {
+            "username": "testuser_20250410181204", # You might need to adjust this based on existing users
+            "password": "testpassword123"
+        }
+        
+        response = await self.client.post(
+            f"{self.base_url}/login",
+            json=login_data,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            self.test_user_id = data.get("UserId")
+            print(f"✅ Successfully logged in user with ID: {self.test_user_id}")
+        else:
+            print(f"❌ Failed to login: {response.text}")
+            
+        return response
         
     async def test_add_inventory_item(self):
         """Test adding a new inventory item"""
-        print("Testing POST /api/inventory - Add inventory item")
+        print("\nTesting POST /api/inventory - Add inventory item")
         
         item_data = {
             "item_name": f"Test Item {datetime.now().strftime('%Y%m%d%H%M%S')}",
@@ -256,6 +328,216 @@ class InventoryAPITester:
             print(f"   Out of stock items: {data.get('out_of_stock_items')}")
         else:
             print(f"❌ Failed to get inventory stats: {response.text}")
+            
+        return response
+    
+    async def test_create_project(self):
+        """Test creating a new project"""
+        if not self.test_user_id:
+            print("\n⚠️ Skipping create project test - no user ID available")
+            return None
+            
+        print("\nTesting POST /api/projects - Create a new project")
+        
+        project_data = {
+            "project_name": f"Test Project {datetime.now().strftime('%Y%m%d%H%M%S')}",
+            "description": "This is a test project created by the automated test script",
+            "created_by": self.test_user_id
+        }
+        
+        response = await self.client.post(
+            f"{self.base_url}/api/projects",
+            json=project_data,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 201:
+            data = response.json()
+            self.test_project_id = data.get("project", {}).get("project_id")
+            print(f"✅ Successfully created project with ID: {self.test_project_id}")
+        else:
+            print(f"❌ Failed to create project: {response.text}")
+            
+        return response
+    
+    async def test_get_all_projects(self):
+        """Test getting all projects"""
+        print("\nTesting GET /api/projects - Get all projects")
+        
+        response = await self.client.get(f"{self.base_url}/api/projects")
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ Successfully retrieved {len(data)} projects")
+        else:
+            print(f"❌ Failed to get projects: {response.text}")
+            
+        return response
+    
+    async def test_get_project(self):
+        """Test getting a specific project"""
+        if not self.test_project_id:
+            print("\n⚠️ Skipping get project test - no project ID available")
+            return None
+            
+        print(f"\nTesting GET /api/projects/{self.test_project_id} - Get specific project")
+        
+        response = await self.client.get(f"{self.base_url}/api/projects/{self.test_project_id}")
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ Successfully retrieved project: {data.get('project_name', 'Unknown')}")
+        else:
+            print(f"❌ Failed to get project: {response.text}")
+            
+        return response
+    
+    async def test_update_project(self):
+        """Test updating a project"""
+        if not self.test_project_id or not self.test_user_id:
+            print("\n⚠️ Skipping update project test - no project or user ID available")
+            return None
+            
+        print(f"\nTesting PUT /api/projects/{self.test_project_id} - Update project")
+        
+        update_data = {
+            "project_name": f"Updated Project {datetime.now().strftime('%Y%m%d%H%M%S')}",
+            "description": f"Updated description at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "user_id": self.test_user_id
+        }
+        
+        response = await self.client.put(
+            f"{self.base_url}/api/projects/{self.test_project_id}",
+            json=update_data,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("✅ Successfully updated project")
+        else:
+            print(f"❌ Failed to update project: {response.text}")
+            
+        return response
+    
+    async def test_add_item_to_project(self):
+        """Test adding an item to a project"""
+        if not self.test_project_id or not self.test_item_id or not self.test_user_id:
+            print("\n⚠️ Skipping add item to project test - missing required IDs")
+            return None
+            
+        print(f"\nTesting POST /api/projects/{self.test_project_id}/items - Add item to project")
+        
+        item_data = {
+            "item_id": self.test_item_id,
+            "user_id": self.test_user_id
+        }
+        
+        response = await self.client.post(
+            f"{self.base_url}/api/projects/{self.test_project_id}/items",
+            json=item_data,
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("✅ Successfully added item to project")
+        else:
+            print(f"❌ Failed to add item to project: {response.text}")
+            
+        return response
+    
+    async def test_get_project_items(self):
+        """Test getting items in a project"""
+        if not self.test_project_id:
+            print("\n⚠️ Skipping get project items test - no project ID available")
+            return None
+            
+        print(f"\nTesting GET /api/projects/{self.test_project_id}/items - Get project items")
+        
+        response = await self.client.get(f"{self.base_url}/api/projects/{self.test_project_id}/items")
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ Successfully retrieved {len(data)} items from project")
+        else:
+            print(f"❌ Failed to get project items: {response.text}")
+            
+        return response
+    
+    async def test_get_user_projects(self):
+        """Test getting projects for a user"""
+        if not self.test_user_id:
+            print("\n⚠️ Skipping get user projects test - no user ID available")
+            return None
+            
+        print(f"\nTesting GET /api/user/{self.test_user_id}/projects - Get user projects")
+        
+        response = await self.client.get(f"{self.base_url}/api/user/{self.test_user_id}/projects")
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ Successfully retrieved {len(data)} projects for user")
+        else:
+            print(f"❌ Failed to get user projects: {response.text}")
+            
+        return response
+    
+    async def test_remove_item_from_project(self):
+        """Test removing an item from a project"""
+        if not self.test_project_id or not self.test_item_id or not self.test_user_id:
+            print("\n⚠️ Skipping remove item from project test - missing required IDs")
+            return None
+            
+        print(f"\nTesting DELETE /api/projects/{self.test_project_id}/items/{self.test_item_id} - Remove item from project")
+        
+        # Add the Content-Type header for DELETE request
+        response = await self.client.delete(
+            f"{self.base_url}/api/projects/{self.test_project_id}/items/{self.test_item_id}?user_id={self.test_user_id}",
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("✅ Successfully removed item from project")
+        else:
+            print(f"❌ Failed to remove item from project: {response.text}")
+            
+        return response
+    
+    async def test_delete_project(self):
+        """Test deleting a project"""
+        if not self.test_project_id or not self.test_user_id:
+            print("\n⚠️ Skipping delete project test - no project or user ID available")
+            return None
+            
+        print(f"\nTesting DELETE /api/projects/{self.test_project_id} - Delete project")
+        
+        # Add the Content-Type header for DELETE request
+        response = await self.client.delete(
+            f"{self.base_url}/api/projects/{self.test_project_id}?user_id={self.test_user_id}",
+            headers={"Content-Type": "application/json"}
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("✅ Successfully deleted project")
+        else:
+            print(f"❌ Failed to delete project: {response.text}")
             
         return response
     

@@ -28,6 +28,12 @@
   background-color: #f9f9f9;
 }
 
+.project-header{
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+}
+
 .item-container{
   display:flex;
   flex-direction: column;

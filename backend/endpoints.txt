@@ -1,5 +1,4 @@
 Inventory Endpoints:
-
 GET /api/inventory - Get all inventory items
 GET /api/inventory/<item_id> - Get a specific item
 POST /api/inventory - Add a new item
@@ -7,13 +6,28 @@ PUT /api/inventory/<item_id> - Update an item
 DELETE /api/inventory/<item_id> - Delete an item
 
 Checkout Endpoints:
-
 GET /api/checkout - Get all checkout records
 GET /api/checkout/active - Get currently checked out items
 POST /api/checkout/<item_id> - Check out an item
 PUT /api/checkout/<checkout_id>/return - Return a checked out item
 PUT /api/checkout/<checkout_id>/update-condition - Update an item's condition
 
-Statistics Endpoint:
+Project Endpoints:
+GET /api/projects - Get all projects
+GET /api/projects/<project_id> - Get a specific project
+POST /api/projects - Create a new project
+PUT /api/projects/<project_id> - Update project details
+DELETE /api/projects/<project_id> - Delete a project
 
+Project Membership:
+POST /api/projects/<project_id>/join - Join a project
+POST /api/projects/<project_id>/leave - Leave a project
+GET /api/user/<user_id>/projects - Get all projects for a user
+
+Project Items:
+GET /api/projects/<project_id>/items - Get items in a project
+POST /api/projects/<project_id>/items - Add an item to a project
+DELETE /api/projects/<project_id>/items/<item_id> - Remove an item from a project
+
+Statistics Endpoint:
 GET /api/stats/inventory - Get inventory statistics

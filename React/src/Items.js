@@ -132,7 +132,10 @@ const ProjectItemList = ({user}) => {
       <>
       {projects.map((project)=>(
         <div key={project.project_id} className="project-container">
-          <h2>{project.project_name}</h2>
+          <div className="project-header">
+            <h3>{project.project_name}</h3>
+            <h3>Desciption: {project.project_description}</h3>
+          </div>
           {project.items && project.items.length > 0 ? (
             project.items.map((item) => (
             <div key={item._id} className="item-container">
