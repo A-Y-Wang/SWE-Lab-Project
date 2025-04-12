@@ -470,13 +470,22 @@ def get_all_projects():
         result = []
 
         for project in projects:
-            # Format basic project information based on actual structure seen in image
+            user_ids = project.get("users", [])
+            usernames = []
+            # Look up each user document by ID and build a list of usernames.
+            for uid in user_ids:
+                user_doc = user_db["UserLogin"].find_one({"UserId": int(uid)})
+                if user_doc:
+                    usernames.append(user_doc.get("Username", "Unknown"))
+                else:
+                    usernames.append("Unknown")
+
             project_data = {
-                "project_name": project.get("project_name", "Unnamed Project"),
-                "project_id": project.get("project_id", ""),
-                "description": project.get("description", ""),
-                "users": project.get("users", []),
-                "items": []
+            "project_name": project.get("project_name", "Unnamed Project"),
+            "project_id": project.get("project_id", ""),
+            "description": project.get("description", ""),
+            "users": usernames, 
+            "items": []
             }
             item_ids = project.get("items", [])
             if item_ids:
@@ -489,7 +498,6 @@ def get_all_projects():
                     })
 
             result.append(project_data)
-
         return jsonify(result), 200
     except Exception as e:
         print(f"Error fetching projects: {str(e)}")
@@ -503,7 +511,7 @@ def get_myprojects(userId):
     project_ids = user.get("ProjectIds", [])
     return jsonify(project_ids), 200
 
-@app.route('/api/projects', methods=['POST'])
+@app.route('/api/createprojects', methods=['POST'])
 def create_project():
     try:
         data = request.get_json()
@@ -512,7 +520,7 @@ def create_project():
         project_id = data.get('project_id')
         description = data.get('description', "")
         users = data.get('users', [])
-        items = data.get('items', [])
+        items = ["T0000", "T0001"]
 
         if not project_name or not project_id:
             return jsonify({"error": "Missing required fields: project_name or project_id"}), 400

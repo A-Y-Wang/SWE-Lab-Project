@@ -50,6 +50,7 @@ const D_ProjectCard = ({ project = null }) => {
       })
       .catch((error) => console.error("Error fetching my projects:", error));
   }
+  
   useEffect(() => {
     fetchMyProjects();
   }, [userId]);
@@ -92,14 +93,22 @@ const D_ProjectCard = ({ project = null }) => {
 
   const [errorMessage, setErrorMessage] = useState('');
   // Toggle join/leave and add/remove placeholder user
+
   const toggleJoinLeave = async () => {
     // If the user is not yet joined, validate the join input
+    console.log("joinInput:", joinInput.trim());
+    console.log("projectData.project_id:", projectData.project_id);
+
+    if (joinInput.trim() !== projectData.project_id) {
+      setErrorMessage("Entered Project ID does not match this project.");
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 2000);
+      setJoinInput(''); // Clear the input box as well
+      return; // Exit early if the input does not match
+    }
+
     if (!isJoined) {
-      if (joinInput.trim() !== projectData.project_id) {
-        setErrorMessage("Entered Project ID does not match this project.");
-        return; // Exit early if the input does not match
-      }
-  
       // Call the backend API to join the project
       try {
         const response = await fetch('/api/user/joinProject', {
@@ -124,6 +133,7 @@ const D_ProjectCard = ({ project = null }) => {
         setErrorMessage('Error joining project');
       }
     } else {
+  
       // If the user is already joined, call the backend API to leave the project
       try {
         const response = await fetch('/api/user/leaveProject', {
@@ -148,6 +158,8 @@ const D_ProjectCard = ({ project = null }) => {
         setErrorMessage('Error leaving project');
       }
     }
+
+    setJoinInput('');
   };
 
   return (
@@ -181,6 +193,8 @@ const D_ProjectCard = ({ project = null }) => {
           ))}
         </select>
       </div>
+
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
 
       <div className="join-input-container">
         <label htmlFor="joinInput">Enter Project ID:</label>

@@ -5,56 +5,80 @@
     padding: 20px;
     font-family: Arial, sans-serif;
   }
-  
-  /* Search container styling */
-  .search-container {
-    width: 100%;
-    background-color: #f8d7da; /* Pink background as shown in image */
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  /* Search input styling */
+
+.dashboard-header {
+  position: relative; /* Enable absolute positioning for children */
+  text-align: center; /* Center the header text (e.g., h1) */
+  margin-bottom: 20px;
+}
+
+.checkout-button-container {
+  position: absolute;
+  left: 10;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Search container styling */
+.search-container {
+  width: 100%;
+  background-color: #f8d7da; /* Pink background as shown in image */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Search input styling */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Projects container */
+.projects-container {
+  margin-bottom: 20px;
+}
+
+/* Add project container */
+.add-project-container {
+  margin-top: 20px;
+}
+
+/*Error Message adding*/
+.error-message {
+  width: 100%;
+  background-color: #f8d7da; /* Pink background as shown in image */
+  padding: 10px;
+  color: red;
+  font-size: 14px;
+  border-radius: 5px;
+  margin-top: 10px;
+  align-items: center;
+  font-weight: bold;
+}
+
+.error {
+  color: red;                     
+  border: 1px solid red;          
+  background-color: lightpink;      
+  padding: 10px;                  
+  margin: 10px 0;                 
+  border-radius: 4px;            
+  font-weight: bold;       
+}
+
+
+
+/* Responsive design */
+@media (max-width: 768px) {
   .search-input {
     width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    box-sizing: border-box;
   }
-  
-  /* Projects container */
-  .projects-container {
-    margin-bottom: 20px;
-  }
-  
-  /* Add project container */
-  .add-project-container {
-    margin-top: 20px;
-  }
-
-  /*Error Message adding*/
-  .error-message {
-    width: 100%;
-    background-color: #f8d7da; /* Pink background as shown in image */
-    padding: 10px;
-    color: red;
-    font-size: 14px;
-    border-radius: 5px;
-    margin-top: 10px;
-    align-items: center;
-    font-weight: bold;
-  }
-  
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .search-input {
-      width: 100%;
-    }
-  }
+}
   
