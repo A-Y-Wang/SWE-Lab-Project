@@ -13,7 +13,7 @@ const Dashboard = () => {
   // Fetch projects from the backend when the component mounts
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/projects');
+      const response = await fetch('/api/projects');
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
@@ -52,7 +52,7 @@ const Dashboard = () => {
       items: [],
     };
     try {
-      const response = await fetch('http://localhost:5000/api/createprojects', {
+      const response = await fetch('/api/createprojects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

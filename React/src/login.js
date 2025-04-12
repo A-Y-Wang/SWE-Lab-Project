@@ -12,7 +12,7 @@ export default function LoginPage() {
     console.log("Username:", username, "Password:", password);
     //add login logic here
     try{
-      await fetch("http://localhost:5000/login", {
+      await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

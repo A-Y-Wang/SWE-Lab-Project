@@ -42,7 +42,7 @@ const D_ProjectCard = ({ project = null }) => {
 
   const fetchMyProjects = () =>{
     if(!userId) return;
-    fetch(`http://localhost:5000/api/user/${userId}/myprojects`)
+    fetch(`/api/user/${userId}/myprojects`)
       .then((res)=> res.json())
       .then((data) => {
         console.log("Fetched my projects:", data);
@@ -111,7 +111,7 @@ const D_ProjectCard = ({ project = null }) => {
     if (!isJoined) {
       // Call the backend API to join the project
       try {
-        const response = await fetch('http://localhost:5000/api/user/joinProject', {
+        const response = await fetch('/api/user/joinProject', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId, projectId: projectData.project_id }),
@@ -136,7 +136,7 @@ const D_ProjectCard = ({ project = null }) => {
   
       // If the user is already joined, call the backend API to leave the project
       try {
-        const response = await fetch('http://localhost:5000/api/user/leaveProject', {
+        const response = await fetch('/api/user/leaveProject', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId, projectId: projectData.project_id }),
